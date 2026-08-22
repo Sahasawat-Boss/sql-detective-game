@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useMemo, useState } from "react";
-import { CASES } from "@/data/cases";
 import { matchesAnswer } from "@/lib/normalize";
 import type { DetectiveCase } from "@/types";
 
@@ -16,33 +15,33 @@ interface UseGame {
   submitAnswer: (input: string) => boolean;
 }
 
-/** สถานะเกม: คดีที่กำลังเปิดอยู่ และรายการคดีที่ปิดไปแล้ว */
-export function useGame(): UseGame {
+/** สถานะเกม: คดีที่กำลังเปิดอยู่ และรายการคดีที่ปิดไปแล้ว — cases มาจากรอบเล่นปัจจุบัน (ชื่อสุ่มใหม่ทุกรอบ) */
+export function useGame(cases: DetectiveCase[]): UseGame {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [solved, setSolved] = useState<Set<number>>(new Set());
 
   const submitAnswer = useCallback(
     (input: string) => {
-      const correct = matchesAnswer(input, CASES[currentIndex].answers);
+      const correct = matchesAnswer(input, cases[currentIndex].answers);
       if (correct) {
         setSolved((prev) => new Set(prev).add(currentIndex));
       }
       return correct;
     },
-    [currentIndex],
+    [cases, currentIndex],
   );
 
   return useMemo(
     () => ({
-      cases: CASES,
-      current: CASES[currentIndex],
+      cases,
+      current: cases[currentIndex],
       currentIndex,
       solved,
       isSolved: solved.has(currentIndex),
-      allSolved: solved.size === CASES.length,
+      allSolved: solved.size === cases.length,
       goTo: setCurrentIndex,
       submitAnswer,
     }),
-    [currentIndex, solved, submitAnswer],
+    [cases, currentIndex, solved, submitAnswer],
   );
 }

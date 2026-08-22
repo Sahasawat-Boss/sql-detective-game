@@ -22,6 +22,21 @@ export interface QueryResult {
   values: (string | number | Uint8Array | null)[][];
 }
 
+/**
+ * โน้ตหนึ่งใบในสมุดบันทึกของผู้เล่น
+ * อยู่ข้ามคดี (จดที่สำนวน 3 แล้วเปิดอ่านตอนสำนวน 8 ได้) และข้ามการรีเฟรชหน้า
+ */
+export interface PlayerNote {
+  id: string;
+  /** เนื้อโน้ต — ถ้า kind เป็น "query" คือคิวรี SQL ที่กดใส่กลับคอนโซลได้ */
+  body: string;
+  kind: "text" | "query";
+  /** เลขสำนวนตอนที่จด ใช้ติดป้ายว่าโน้ตใบนี้มาจากด่านไหน */
+  caseN: number;
+  /** epoch ms ใช้เรียงใหม่ไปเก่า */
+  createdAt: number;
+}
+
 export type MessageTone = "info" | "ok" | "error";
 
 export interface TableSchema {

@@ -7,7 +7,7 @@ export default function ProgressMeter({
   solved: Set<number>;
 }) {
   return (
-    <div className="mt-4 flex items-center justify-center gap-1.5">
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5">
       {Array.from({ length: total }, (_, i) => (
         <i
           key={i}

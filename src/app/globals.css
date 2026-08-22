@@ -30,7 +30,9 @@
     font-family: var(--font-sans), system-ui, sans-serif;
     line-height: 1.65;
     min-height: 100vh;
-    perspective: 1600px;
+    /* ห้ามใส่ perspective ตรงนี้ — จะทำให้ body กลายเป็น containing block ของลูกที่เป็น
+       position:fixed (ลิ้นชักสมุดบันทึก, ปุ่มลอย) แล้วมันจะยึดกับความสูงเอกสารแทนจอ
+       มุมมอง 3 มิติของอนิเมชัน rise ย้ายไปอยู่ใน transform ของคีย์เฟรมแทน */
     background:
       radial-gradient(90% 55% at 50% -8%, #6b4e2e55 0%, transparent 62%),
       repeating-linear-gradient(96deg, transparent 0 6px, #00000012 6px 7px),
@@ -274,6 +276,70 @@
     box-shadow: 0 0 9px var(--brass);
   }
 
+  /* ---------- ลิ้นชักสมุดบันทึก ---------- */
+  .notebook-fab {
+    font-family: var(--font-mono), monospace;
+    @apply fixed bottom-5 right-5 z-30 flex cursor-pointer items-center gap-2 rounded-full px-4 py-2.5 text-[12.5px] font-semibold tracking-wide;
+    border: 1px solid #00000055;
+    background: linear-gradient(180deg, #d9ac4b, #b0842f);
+    color: #231a0c;
+    box-shadow: 0 3px 0 #6e5220, 0 10px 20px -8px #000000cc;
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .notebook-fab:active {
+    transform: translateY(3px);
+    box-shadow: 0 0 0 #6e5220, 0 4px 10px -6px #000000aa;
+  }
+  .notebook-badge {
+    @apply grid h-[18px] min-w-[18px] place-items-center rounded-full px-1 text-[10.5px] leading-none;
+    background: var(--stamp);
+    color: #f5e9cc;
+  }
+
+  /* ฉากหลังตอนลิ้นชักเปิด */
+  .notebook-scrim {
+    @apply fixed inset-0 z-40;
+    background: #0d0905aa;
+    transition: opacity 0.28s ease, visibility 0s;
+  }
+  .notebook-scrim[data-open="false"] {
+    @apply pointer-events-none;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.28s ease, visibility 0s 0.28s;
+  }
+
+  .notebook-drawer {
+    @apply fixed right-0 top-0 z-50 flex h-full w-[min(390px,90vw)] flex-col;
+    background:
+      repeating-linear-gradient(0deg, transparent 0 26px, #2c201510 26px 27px),
+      linear-gradient(160deg, var(--manila-hi), var(--manila) 55%, var(--manila-sh));
+    box-shadow:
+      -20px 0 44px -16px #000000dd,
+      inset 1px 0 0 #ffffff55;
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), visibility 0s;
+  }
+  /* ปิดแล้วต้อง visibility:hidden ด้วย ไม่งั้นยัง tab เข้าไปโดนปุ่มที่เลื่อนออกไปนอกจอได้ */
+  .notebook-drawer[data-open="false"] {
+    transform: translateX(100%);
+    visibility: hidden;
+    transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1), visibility 0s 0.28s;
+  }
+
+  .note-card {
+    @apply relative rounded-sm py-2.5 pl-3.5 pr-3;
+    background: #ffffff4d;
+    border: 1px solid #2c201526;
+    border-left: 3px solid var(--brass);
+  }
+  /* ลิ้นชักแคบ ตัดบรรทัดยาวลงมาแทนเลื่อนแนวนอน จะได้เห็นคิวรีทั้งก้อนในตาเดียว */
+  .note-sql {
+    font-family: var(--font-mono), monospace;
+    @apply m-0 whitespace-pre-wrap break-words rounded-[3px] px-2.5 py-2 text-[12px] leading-[1.75];
+    background: var(--term);
+    color: var(--term-fg);
+  }
+
   /* ---------- ข้อความสถานะ ---------- */
   .msg {
     font-family: var(--font-mono), monospace;
@@ -314,7 +380,7 @@
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(18px) rotateX(6deg);
+    transform: perspective(1600px) translateY(18px) rotateX(6deg);
   }
   to {
     opacity: 1;

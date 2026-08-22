@@ -14,9 +14,22 @@ interface Props {
   placeholderNote: string;
   /** รีเซ็ตช่องเขียนเมื่อค่านี้เปลี่ยน (ใช้เลขคดี) */
   resetKey: number;
+  /**
+   * คำขอวางคิวรีจากสมุดบันทึก — ต้องเป็น object ใหม่ทุกครั้งที่กด
+   * แม้จะเป็นคิวรีเดิม เพื่อให้ effect ทำงานซ้ำได้
+   */
+  insertRequest: { sql: string } | null;
+  /** เก็บคิวรีที่เขียนค้างอยู่ลงสมุดบันทึก */
+  onSaveQuery: (sql: string) => void;
 }
 
-export default function QueryConsole({ db, placeholderNote, resetKey }: Props) {
+export default function QueryConsole({
+  db,
+  placeholderNote,
+  resetKey,
+  insertRequest,
+  onSaveQuery,
+}: Props) {
   const [sql, setSql] = useState("");
   const [result, setResult] = useState<QueryResult | null>(null);
   const [note, setNote] = useState<{ tone: MessageTone; text: string }>({
@@ -25,12 +38,24 @@ export default function QueryConsole({ db, placeholderNote, resetKey }: Props) {
   });
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // ล้างช่องเขียนเฉพาะตอนเปลี่ยนคดี — ไม่ผูกกับ placeholderNote
+  // ซึ่งเปลี่ยนตอนโหลดฐานข้อมูลเสร็จด้วย และจะลบสิ่งที่ผู้เล่นพิมพ์ค้างไว้ทิ้ง
   useEffect(() => {
     setSql("");
     setResult(null);
-    setNote({ tone: "info", text: placeholderNote });
     textareaRef.current?.focus();
-  }, [resetKey, placeholderNote]);
+  }, [resetKey]);
+
+  useEffect(() => {
+    setNote({ tone: "info", text: placeholderNote });
+  }, [placeholderNote]);
+
+  useEffect(() => {
+    if (!insertRequest) return;
+    setSql(insertRequest.sql);
+    setNote({ tone: "info", text: "วางคิวรีจากสมุดบันทึกแล้ว" });
+    textareaRef.current?.focus();
+  }, [insertRequest]);
 
   const handleRun = () => {
     if (!db) return;
@@ -92,6 +117,17 @@ export default function QueryConsole({ db, placeholderNote, resetKey }: Props) {
           }}
         >
           ล้าง
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          disabled={!sql.trim()}
+          onClick={() => {
+            onSaveQuery(sql);
+            setNote({ tone: "ok", text: "เก็บคิวรีลงสมุดบันทึกแล้ว — เปิดอ่านได้ทุกด่าน" });
+          }}
+        >
+          📌 เก็บคิวรี
         </button>
         <span className="ml-auto font-mono text-[11px] text-[#7d6b4c]">Ctrl + Enter</span>
       </div>

@@ -98,7 +98,8 @@ export default function Page() {
         <section id="cases" className="mt-14 scroll-mt-20">
           <h2 className="section-title">สำนวนคดีทั้งหมด</h2>
           <p className="section-lead">
-            เรียงจากง่ายไปยาก คดีที่ {CASES.length - 2}–{CASES.length} ต่อกันเป็นเนื้อเรื่องเดียว —
+            เรียงจากง่ายไปยาก เริ่มที่ <code>SELECT · WHERE</code> แล้วไต่ไปจนถึง window function
+            และ recursive CTE · คดีที่ 6–8 กับ 13–16 ต่อกันเป็นเนื้อเรื่องเดียว —
             คนที่ดูเหมือนผิดตอนแรก อาจจะโดนใส่ร้ายอยู่ก็ได้
           </p>
 

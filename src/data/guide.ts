@@ -26,14 +26,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT * FROM people;",
             explain:
               "<code>*</code> แปลว่าเอาทุกคอลัมน์ เหมาะกับตอนสำรวจว่าในตารางมีอะไรบ้าง แต่เวลาทำงานจริงควรระบุชื่อคอลัมน์ เพราะอ่านง่ายกว่าและไม่พังเวลามีคนเพิ่มคอลัมน์ใหม่",
-            output: "20 แถว · id, name, age, hat_color, shirt_color, height_cm, district",
+            output: "44 แถว · id, name, age, hat_color, shirt_color, height_cm, district",
           },
           {
             label: "เอาแค่ชื่อกับส่วนสูง",
             sql: "SELECT name, height_cm FROM people;",
             explain:
               "ลำดับคอลัมน์ในผลลัพธ์เรียงตามที่เขียนหลัง <code>SELECT</code> ไม่ใช่ตามลำดับในตาราง",
-            output: "20 แถว · name, height_cm",
+            output: "44 แถว · name, height_cm",
           },
           {
             label: "คำนวณระหว่างทางก็ได้",
@@ -58,7 +58,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT DISTINCT district FROM people;",
             explain:
               "<code>DISTINCT</code> ยุบแถวที่ค่าซ้ำกันให้เหลือแถวเดียว เป็นท่าแรกที่ควรทำเวลาเจอคอลัมน์ที่ยังไม่รู้ว่าเก็บค่าอะไรได้บ้าง",
-            output: "4 แถว — Old Town, Neon District, Riverside, Downtown",
+            output: "5 แถว — Old Town, Neon District, Riverside, Downtown, Harbor",
           },
           {
             label: "ตั้งชื่อคอลัมน์เป็นภาษาคน",
@@ -129,14 +129,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name, hat_color FROM people\nWHERE hat_color = 'red';",
             explain:
               "ข้อความต้องครอบด้วย single quote เสมอ ตัวเลขไม่ต้อง และ SQL ใช้ <code>=</code> ตัวเดียวในการเทียบ (ไม่ใช่ <code>==</code> แบบภาษาโปรแกรมทั่วไป)",
-            output: "5 แถว — สมชาย, มานี, กิตติ, เอกชัย, ณรงค์",
+            output: "8 แถว",
           },
           {
             label: "คนที่สูงเกิน 180",
             sql: "SELECT name, height_cm FROM people\nWHERE height_cm > 180;",
             explain:
               "“เกิน 180” คือ <code>&gt; 180</code> (ไม่รวม 180) ส่วน “ตั้งแต่ 180 ขึ้นไป” คือ <code>&gt;= 180</code> — คดีชี้เป็นชี้ตายกันตรงรายละเอียดนี้บ่อยมาก",
-            output: "6 แถว — สมชาย 183, ธนา 181, อนันต์ 190, วีระ 185, ชลธี 188, บุญมี 182",
+            output: "12 แถว — สูงสุด 190 ซม.",
           },
           {
             label: "ทุกคนที่ไม่ได้อยู่ Old Town",
@@ -161,7 +161,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name, hat_color, height_cm FROM people\nWHERE hat_color = 'blue' AND height_cm > 180;",
             explain:
               "<code>AND</code> = ต้องจริงทั้งคู่ ยิ่งต่อ AND ยิ่งได้แถวน้อยลง เป็นวิธีบีบวงผู้ต้องสงสัยที่ตรงไปตรงมาที่สุด — สำนวนที่ 1 ในเกมใช้ท่านี้ตรง ๆ แค่เปลี่ยนสีหมวก",
-            output: "2 แถว — อนันต์ ภูผา 190, ชลธี คลื่นลม 188",
+            output: "2 แถว — 190 ซม. กับ 188 ซม.",
           },
           {
             label: "อยู่ Old Town หรือ Riverside",
@@ -197,14 +197,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT type, location FROM complaints\nWHERE type IN ('noise', 'graffiti');",
             explain:
               "<code>IN</code> คือ OR หลาย ๆ อันย่อให้สั้น เทียบเท่ากับ <code>type='noise' OR type='graffiti'</code> แต่อ่านง่ายกว่ามากเมื่อรายการยาว",
-            output: "5 แถว",
+            output: "8 แถว",
           },
           {
             label: "การซื้อของในช่วงราคาหนึ่ง",
             sql: "SELECT item, price FROM purchases\nWHERE price BETWEEN 100 AND 300;",
             explain:
               "<code>BETWEEN</code> <b>รวมปลายทั้งสองข้าง</b> เท่ากับ <code>price &gt;= 100 AND price &lt;= 300</code>",
-            output: "5 แถว — spray paint ×4, black gloves",
+            output: "15 แถว",
           },
           {
             label: "คนที่ไม่มีข้อมูลสีหมวก",
@@ -241,7 +241,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name, height_cm FROM people\nORDER BY height_cm DESC;",
             explain:
               "ไม่ใส่อะไรต่อท้าย = <code>ASC</code> (น้อยไปมาก) เป็นค่าเริ่มต้น ใส่ <code>DESC</code> เมื่ออยากได้มากไปน้อย",
-            output: "แถวแรก — อนันต์ ภูผา 190",
+            output: "44 แถว — แถวแรกสูง 190 ซม.",
           },
           {
             label: "เรียงสองชั้น",
@@ -295,7 +295,7 @@ export const GUIDE: GuideChapter[] = [
     level: "ระดับกลาง",
     summary:
       "เปลี่ยนจาก “ดูข้อมูลทีละแถว” เป็น “สรุปเป็นตัวเลข” — ใครโผล่กล้องวงจรปิดกี่ครั้ง ใครโทรหาใครรวมกี่นาที",
-    cases: [4, 7],
+    cases: [4, 7, 12],
     topics: [
       {
         id: "agg-functions",
@@ -308,21 +308,21 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT COUNT(*) AS total FROM people;",
             explain:
               "<code>COUNT(*)</code> นับทุกแถว ส่วน <code>COUNT(คอลัมน์)</code> นับเฉพาะแถวที่คอลัมน์นั้นไม่เป็น NULL — ต่างกันตรงนี้",
-            output: "1 แถว — 20",
+            output: "1 แถว — 44",
           },
           {
             label: "อายุเฉลี่ย สูงสุด ต่ำสุด ในทีเดียว",
             sql: "SELECT COUNT(*) AS n,\n       AVG(age) AS avg_age,\n       MIN(age) AS youngest,\n       MAX(age) AS oldest\nFROM people;",
             explain:
               "ใส่หลายฟังก์ชันในคิวรีเดียวได้ ทุกตัวสรุปจากชุดแถวเดียวกัน (คือทั้งตาราง เพราะยังไม่มี GROUP BY)",
-            output: "1 แถว — 20, 35.85, 22, 55",
+            output: "1 แถว — 44, 35.75, 21, 58",
           },
           {
             label: "รวมยอดซื้อของทั้งเมือง",
             sql: "SELECT SUM(price) AS total_spent,\n       COUNT(DISTINCT person_id) AS buyers\nFROM purchases;",
             explain:
               "ใส่ <code>DISTINCT</code> ข้างในฟังก์ชันได้ — <code>COUNT(DISTINCT person_id)</code> คือ “มีกี่คน” ไม่ใช่ “ซื้อกี่ครั้ง”",
-            output: "1 แถว — 3580, 9",
+            output: "1 แถว — 70810, 33",
           },
         ],
         pitfalls: [
@@ -341,14 +341,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT district, COUNT(*) AS people_count\nFROM people\nGROUP BY district\nORDER BY people_count DESC;",
             explain:
               "อ่านจากล่างขึ้นบน: จัดกองตามเขต → นับจำนวนในแต่ละกอง → เรียงจากกองใหญ่ไปเล็ก",
-            output: "4 แถว — แต่ละเขตมี 5 คนเท่ากันพอดี",
+            output: "5 แถว — สี่เขตมีเขตละ 9 คน ส่วน Riverside มี 8 คน",
           },
           {
             label: "กล้องตัวไหนบันทึกคนไว้เยอะสุด",
             sql: "SELECT camera_location, COUNT(*) AS logs\nFROM cctv_logs\nGROUP BY camera_location\nORDER BY logs DESC;",
             explain:
               "ลำดับการทำงานจริงคือ <code>FROM/JOIN → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</code> เห็นภาพนี้แล้วจะเขียนถูกเองโดยไม่ต้องท่อง — สำนวนที่ 4 ในเกมคือท่านี้บวก JOIN เพื่อเอาชื่อคนมาแทนชื่อกล้อง",
-            output: "7 แถว — Neon Alley มากที่สุด 9 ครั้ง",
+            output: "12 แถว — Neon Alley มากที่สุด 17 ครั้ง",
           },
         ],
         pitfalls: [
@@ -367,14 +367,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT district, COUNT(*) AS n\nFROM people\nGROUP BY district\nHAVING COUNT(*) > 4;",
             explain:
               "<code>HAVING</code> ทำงานหลัง <code>GROUP BY</code> จึงเห็นค่า <code>COUNT(*)</code> ต่างจาก <code>WHERE</code> ที่ทำงานก่อนจัดกลุ่ม เลยไม่รู้จักค่าสรุปเลย",
-            output: "4 แถว — ทุกเขตมี 5 คน",
+            output: "5 แถว — ทุกเขตมีคนเกิน 4 คนหมด",
           },
           {
             label: "ร้านที่ขายของให้มากกว่าหนึ่งครั้ง และยอดรวมเกิน 300",
             sql: "SELECT shop, COUNT(*) AS bills, SUM(price) AS total\nFROM purchases\nWHERE price > 50\nGROUP BY shop\nHAVING COUNT(*) > 1 AND SUM(price) > 300\nORDER BY total DESC;",
             explain:
               "คิวรีนี้ใช้ทั้งสองอย่างพร้อมกัน: <code>WHERE price &gt; 50</code> กรองทีละแถวก่อนจัดกลุ่ม แล้ว <code>HAVING</code> กรองทีละกลุ่มหลังสรุปยอด — สำนวนที่ 7 ในเกมคือโครงเดียวกันเป๊ะ แค่เปลี่ยนตารางเป็นบันทึกโทรศัพท์",
-            output: "3 แถว — Downtown Mall, Downtown Hardware, Old Town Hardware",
+            output: "6 แถว — Downtown Mall ยอดสูงสุด 27,750",
           },
         ],
         pitfalls: [
@@ -391,7 +391,7 @@ export const GUIDE: GuideChapter[] = [
     level: "ระดับกลาง",
     summary:
       "ของกลางกระจายอยู่คนละตาราง ใบสั่งจอดรถมีแต่ทะเบียน ทะเบียนอยู่ในตารางรถ เจ้าของอยู่ในตารางคน — JOIN คือการลากเส้นเชื่อมสามอย่างนี้เข้าหากัน",
-    cases: [3, 5, 8],
+    cases: [3, 5, 8, 9, 11],
     topics: [
       {
         id: "inner-join",
@@ -404,14 +404,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT p.name, v.plate, v.model\nFROM vehicles v\nJOIN people p ON p.id = v.owner_id;",
             explain:
               "<code>v</code> กับ <code>p</code> คือชื่อย่อ (alias) ของตาราง ทำให้เขียนสั้นและบอกได้ชัดว่าคอลัมน์ไหนมาจากตารางไหน เวลาสองตารางมีคอลัมน์ชื่อซ้ำกัน (เช่น <code>id</code>) จำเป็นต้องมีอยู่แล้ว · <code>JOIN</code> เฉย ๆ คือ <code>INNER JOIN</code>",
-            output: "8 แถว — เท่าจำนวนรถ",
+            output: "20 แถว — เท่าจำนวนรถ",
           },
           {
             label: "ต่อสามตาราง: ใบสั่ง → รถ → เจ้าของ",
             sql: "SELECT p.name, v.plate, t.location, t.issued_at\nFROM parking_tickets t\nJOIN vehicles v ON v.plate = t.plate\nJOIN people p ON p.id = v.owner_id\nWHERE t.paid = 1;",
             explain:
               "ต่อกันเป็นทอด ๆ ได้เรื่อย ๆ ทีละ <code>JOIN</code> คิดเป็นภาพว่ากำลังลากเส้นจากใบสั่ง → ทะเบียนรถ → ตัวเจ้าของ · สำนวนที่ 3 ในเกมคือโครงนี้ แค่เปลี่ยนเงื่อนไขท้ายคิวรี",
-            output: "3 แถว — ใบสั่งที่จ่ายค่าปรับแล้ว",
+            output: "8 แถว — ใบสั่งที่จ่ายค่าปรับแล้ว",
           },
           {
             label: "JOIN แล้วค่อยสรุปยอด",
@@ -421,7 +421,7 @@ export const GUIDE: GuideChapter[] = [
           },
         ],
         pitfalls: [
-          "ลืมเขียน <code>ON</code> = ได้ <b>cross join</b> ทุกแถวคูณทุกแถว 20 คน × 8 คัน = 160 แถวขยะ",
+          "ลืมเขียน <code>ON</code> = ได้ <b>cross join</b> ทุกแถวคูณทุกแถว 44 คน × 20 คัน = 880 แถวขยะ",
           "ถ้าหนึ่งแถวฝั่งซ้ายจับคู่ได้หลายแถวฝั่งขวา ผลลัพธ์จะบานเป็นหลายแถว — <code>COUNT(*)</code> หลัง JOIN จึงมักได้เลขเกินจริง ระวังจุดนี้ให้มาก",
         ],
       },
@@ -436,14 +436,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT p.name, v.plate\nFROM people p\nLEFT JOIN vehicles v ON v.owner_id = p.id\nORDER BY p.id;",
             explain:
               "คนที่ไม่มีรถยังอยู่ในผลลัพธ์ แต่ช่อง <code>plate</code> จะเป็น NULL — ต่างจาก <code>INNER JOIN</code> ที่คนกลุ่มนี้จะหายไปทั้งแถว",
-            output: "20 แถว — ครบทุกคน",
+            output: "44 แถว — ครบทุกคน",
           },
           {
             label: "หา “คนที่ไม่มีของฝั่งขวาเลย”",
             sql: "SELECT p.name\nFROM people p\nLEFT JOIN vehicles v ON v.owner_id = p.id\nWHERE v.id IS NULL;",
             explain:
               "ท่ามาตรฐานชื่อ <b>anti-join</b>: LEFT JOIN แล้วกรองเอาเฉพาะแถวที่ฝั่งขวาเป็น NULL = คนที่ไม่มีรถ ใช้แทน <code>NOT IN</code> ได้และปลอดภัยกว่าเรื่อง NULL",
-            output: "12 แถว",
+            output: "24 แถว",
           },
         ],
         pitfalls: [
@@ -495,7 +495,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name FROM people\nWHERE id IN (SELECT owner_id FROM vehicles);",
             explain:
               "คิวรีข้างในคืนรายการ <code>owner_id</code> ออกมา แล้วข้างนอกกรองคนที่ <code>id</code> อยู่ในรายการนั้น · คิวรีข้างในต้องคืน <b>คอลัมน์เดียว</b> เท่านั้น",
-            output: "8 แถว",
+            output: "20 แถว",
           },
           {
             label: "คนใน Riverside ที่ไม่เคยติดกล้องเลย",
@@ -508,7 +508,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name FROM people\nWHERE id IN (\n  SELECT person_id FROM purchases WHERE price > 500\n);",
             explain:
               "คิวรีข้างในจะซับซ้อนแค่ไหนก็ได้ ตราบใดที่ยังคืนคอลัมน์เดียว — เขียนคิวรีข้างในให้รันผ่านเดี่ยว ๆ ก่อนเสมอ แล้วค่อยเอามาเสียบ",
-            output: "2 แถว — สุดา ไพรวัลย์, อารีย์ สุขสันต์",
+            output: "13 แถว",
           },
         ],
         pitfalls: [
@@ -526,14 +526,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name, age FROM people\nWHERE age > (SELECT AVG(age) FROM people)\nORDER BY age DESC;",
             explain:
               "เขียน <code>WHERE age &gt; AVG(age)</code> ตรง ๆ ไม่ได้ เพราะ <code>WHERE</code> ทำงานทีละแถวและยังไม่รู้จักค่าสรุป ต้องให้คิวรีข้างในคำนวณค่าเฉลี่ยออกมาเป็นตัวเลขตัวเดียวก่อน",
-            output: "9 แถว (ค่าเฉลี่ย 35.85)",
+            output: "20 แถว (ค่าเฉลี่ย 35.75)",
           },
           {
             label: "คนที่สูงที่สุด รวมทุกคนที่เสมอกัน",
             sql: "SELECT name, height_cm FROM people\nWHERE height_cm = (SELECT MAX(height_cm) FROM people);",
             explain:
               "ต่างจาก <code>ORDER BY … LIMIT 1</code> ตรงที่ถ้ามีคนสูงเท่ากันหลายคน ท่านี้ได้มาครบทุกคน",
-            output: "1 แถว — อนันต์ ภูผา 190",
+            output: "1 แถว — 190 ซม.",
           },
         ],
         pitfalls: [
@@ -551,7 +551,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT p.name\nFROM people p\nWHERE EXISTS (\n  SELECT 1 FROM purchases pu WHERE pu.person_id = p.id\n);",
             explain:
               "<code>SELECT 1</code> เพราะ EXISTS สนแค่ว่ามีแถวไหม ไม่สนว่าค่าอะไร · คิวรีข้างในอ้าง <code>p.id</code> ของแถวข้างนอก แบบนี้เรียก correlated subquery",
-            output: "9 แถว",
+            output: "33 แถว",
           },
           {
             label: "คนที่ไม่เคยซื้ออะไรเลย",
@@ -580,7 +580,7 @@ export const GUIDE: GuideChapter[] = [
     level: "ระดับกลาง",
     summary:
       "SQLite ไม่มีชนิดข้อมูลวันเวลาแยกต่างหาก ทุกอย่างเก็บเป็นข้อความ — ซึ่งกลับใช้ง่ายกว่าที่คิด ถ้ารู้กติกา",
-    cases: [5, 8],
+    cases: [5, 8, 10],
     topics: [
       {
         id: "datetime-text",
@@ -593,7 +593,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT p.name, h.room, h.check_out, h.actual_checkout\nFROM hotel_stays h\nJOIN people p ON p.id = h.guest_id\nWHERE h.actual_checkout < h.check_out;",
             explain:
               "เทียบสองคอลัมน์เวลากันเองได้เลย ไม่ต้องแปลงชนิดข้อมูลก่อน · สำนวนที่ 5 ในเกมคือคิวรีนี้กลับเครื่องหมาย",
-            output: "3 แถว",
+            output: "10 แถว",
           },
           {
             label: "กล้องที่บันทึกไว้ในช่วงหัวค่ำวันที่ 7",
@@ -607,7 +607,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT * FROM cctv_logs\nWHERE seen_at LIKE '2026-03-06%';",
             explain:
               "อยากได้ทั้งวันโดยไม่ต้องพิมพ์ช่วงเวลา ใช้ <code>LIKE 'วันที่%'</code> ได้ — อ่านง่ายกว่า แต่ถ้าตารางใหญ่มากจะช้ากว่าการใช้ช่วง เพราะใช้ index ไม่ได้",
-            output: "7 แถว",
+            output: "13 แถว",
           },
         ],
         pitfalls: [
@@ -626,7 +626,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT date(reported_at) AS day, COUNT(*) AS n\nFROM complaints\nGROUP BY day\nORDER BY day;",
             explain:
               "<code>date()</code> ตัดเวลาทิ้งเหลือแต่วันที่ ทำให้จัดกลุ่มรายวันได้ — ถ้า <code>GROUP BY reported_at</code> ตรง ๆ จะได้กลุ่มละหนึ่งแถว เพราะนาทีไม่ซ้ำกัน",
-            output: "7 แถว — วันที่ 3 มี.ค. หายไปเพราะไม่มีเรื่องร้องเรียนเลย",
+            output: "12 แถว — วันที่ 3 มี.ค. หายไปเพราะไม่มีเรื่องร้องเรียนเลย",
           },
           {
             label: "กล้องจับภาพช่วงชั่วโมงไหนบ่อยสุด",
@@ -639,7 +639,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT room,\n       ROUND((julianday(actual_checkout) - julianday(check_out)) * 24 * 60) AS late_minutes\nFROM hotel_stays\nORDER BY late_minutes DESC;",
             explain:
               "<code>julianday()</code> แปลงเวลาเป็นจำนวนวันแบบทศนิยม ลบกันแล้วคูณ 24 × 60 จะได้นาที · ค่าติดลบแปลว่าออกก่อนเวลา",
-            output: "5 แถว — ค่าบวกคือออกช้า",
+            output: "14 แถว — ค่าบวกคือออกช้า",
           },
         ],
         pitfalls: [
@@ -686,7 +686,7 @@ export const GUIDE: GuideChapter[] = [
     level: "ระดับสูง",
     summary:
       "ของที่จะได้ใช้ตอนทำรายงานหรือดูแลฐานข้อมูลจริง ไม่ต้องรีบจำ แต่รู้ว่ามีอยู่แล้วจะประหยัดเวลาตัวเองมหาศาล",
-    cases: [],
+    cases: [13, 14, 15, 16],
     topics: [
       {
         id: "window",
@@ -705,14 +705,14 @@ export const GUIDE: GuideChapter[] = [
             sql: "SELECT name, district, age,\n       ROUND(AVG(age) OVER (PARTITION BY district), 1) AS district_avg\nFROM people\nORDER BY district, age DESC;",
             explain:
               "<code>PARTITION BY</code> คือ “GROUP BY แบบไม่ยุบแถว” — ทุกคนยังอยู่ครบ 20 แถว แต่มีคอลัมน์ค่าเฉลี่ยของเขตตัวเองแปะมาด้วย ท่านี้ทำด้วย GROUP BY ล้วน ๆ ไม่ได้",
-            output: "20 แถว",
+            output: "44 แถว",
           },
           {
             label: "หยิบอันดับหนึ่งของแต่ละกลุ่ม",
             sql: "SELECT name, district, age FROM (\n  SELECT name, district, age,\n         ROW_NUMBER() OVER (PARTITION BY district ORDER BY age DESC) AS rn\n  FROM people\n)\nWHERE rn = 1;",
             explain:
               "ท่า <b>top-N per group</b> ที่ใช้บ่อยมาก: ให้เลขลำดับในแต่ละกลุ่มก่อน แล้วค่อยกรองเอาเฉพาะลำดับที่ต้องการ · กรอง <code>rn</code> ใน <code>WHERE</code> ชั้นเดียวกันไม่ได้ ต้องซ้อนอีกชั้นแบบนี้",
-            output: "4 แถว — คนอายุมากสุดของแต่ละเขต",
+            output: "5 แถว — คนอายุมากสุดของแต่ละเขต",
           },
           {
             label: "ยอดสะสมตามเวลา",
@@ -737,7 +737,7 @@ export const GUIDE: GuideChapter[] = [
             sql: "WITH spend AS (\n  SELECT person_id, SUM(price) AS total\n  FROM purchases\n  GROUP BY person_id\n)\nSELECT p.name, s.total\nFROM spend s\nJOIN people p ON p.id = s.person_id\nWHERE s.total > 300\nORDER BY s.total DESC;",
             explain:
               "อ่านจากบนลงล่างเป็นขั้น ๆ: สรุปยอดก่อน → แล้วค่อยเอาไปต่อกับชื่อคน ให้ผลเหมือน subquery ใน FROM แต่อ่านง่ายกว่ามาก",
-            output: "4 แถว",
+            output: "18 แถว",
           },
           {
             label: "ต่อ CTE หลายชั้น",
@@ -765,10 +765,17 @@ export const GUIDE: GuideChapter[] = [
             output: "8 แถว — วันละหนึ่งแถวครบทั้งช่วง",
           },
           {
-            label: "รูปแบบคลาสสิก: ไล่สายบังคับบัญชา",
+            label: "ไล่สายว่าใครชวนใครเข้ามา",
+            sql: "WITH RECURSIVE chain AS (\n  SELECT person_id, recruited_by, 1 AS step\n  FROM crew_links WHERE person_id = 44\n  UNION ALL\n  SELECT l.person_id, l.recruited_by, ch.step + 1\n  FROM crew_links l\n  JOIN chain ch ON l.person_id = ch.recruited_by\n)\nSELECT c.step, p.name, c.recruited_by\nFROM chain c\nJOIN people p ON p.id = c.person_id\nORDER BY c.step;",
+            explain:
+              "ตาราง <code>crew_links</code> เก็บว่าใครถูกใครชวนเข้ามา (<code>recruited_by</code>) · ส่วนบนคือจุดเริ่ม (คน id 44) ส่วนล่างคือกฎไต่ขึ้นไปหาคนที่ชวนเขา วนจนถึงคนที่ <code>recruited_by</code> เป็น NULL — คอลัมน์ <code>step</code> ที่บวกไปเรื่อย ๆ ใช้บอกว่าไต่มากี่ชั้นแล้ว",
+            output: "3 แถว — ไต่ขึ้นไปสามชั้นจนสุดสาย",
+          },
+          {
+            label: "รูปแบบคลาสสิก: ไล่สายบังคับบัญชาลงล่าง",
             sql: "WITH RECURSIVE org_chart AS (\n  SELECT id, name, manager_id FROM employees WHERE manager_id IS NULL\n  UNION ALL\n  SELECT e.id, e.name, e.manager_id\n  FROM employees e\n  JOIN org_chart o ON e.manager_id = o.id\n)\nSELECT * FROM org_chart;",
             explain:
-              "รูปแบบที่เจอในตำราแทบทุกเล่ม — เริ่มจากหัวหน้าสูงสุด แล้วไล่ลูกน้องลงไปเรื่อย ๆ · ฐานข้อมูลในเกมนี้ไม่มีตาราง <code>employees</code> ตัวอย่างนี้จึงรันไม่ผ่าน ใส่ไว้ให้เห็นรูปแบบเฉย ๆ",
+              "รูปแบบที่เจอในตำราแทบทุกเล่ม — เริ่มจากหัวหน้าสูงสุดแล้วไล่ลูกน้องลงไปเรื่อย ๆ (กลับทิศกับตัวอย่างข้างบน) · ฐานข้อมูลในเกมไม่มีตาราง <code>employees</code> ตัวอย่างนี้จึงรันไม่ผ่าน ใส่ไว้ให้เห็นรูปแบบเฉย ๆ",
           },
         ],
         pitfalls: [

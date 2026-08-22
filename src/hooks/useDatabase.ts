@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import initSqlJs, { type Database } from "sql.js";
-import { SEED_SQL } from "@/data/seed";
 import type { QueryResult, TableSchema } from "@/types";
 
 interface UseDatabase {
@@ -12,8 +11,8 @@ interface UseDatabase {
   error: string | null;
 }
 
-/** โหลด sql.js (wasm) แล้วสร้างฐานข้อมูลในหน่วยความจำจาก SEED_SQL */
-export function useDatabase(): UseDatabase {
+/** โหลด sql.js (wasm) แล้วสร้างฐานข้อมูลในหน่วยความจำจาก seedSql ที่ส่งเข้ามา */
+export function useDatabase(seedSql: string): UseDatabase {
   const [db, setDb] = useState<Database | null>(null);
   const [schema, setSchema] = useState<TableSchema[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +25,7 @@ export function useDatabase(): UseDatabase {
       .then((SQL) => {
         if (cancelled) return;
         instance = new SQL.Database();
-        instance.run(SEED_SQL);
+        instance.run(seedSql);
         setDb(instance);
         setSchema(readSchema(instance));
       })
@@ -38,7 +37,7 @@ export function useDatabase(): UseDatabase {
       cancelled = true;
       instance?.close();
     };
-  }, []);
+  }, [seedSql]);
 
   return { db, schema, loading: !db && !error, error };
 }
