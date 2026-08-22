@@ -55,10 +55,11 @@ export default function GameBoard() {
           <QueryConsole
             db={db}
             resetKey={current.n}
+            starter={current.starter}
             placeholderNote={
               loading
                 ? "กำลังโหลดฐานข้อมูล…"
-                : `ตารางที่น่าจะได้ใช้: ${current.tables.join(", ")}`
+                : `กด “รันคิวรี” เพื่อดูผลลัพธ์ · ตารางที่น่าจะได้ใช้: ${current.tables.join(", ")}`
             }
             insertRequest={insertRequest}
             onSaveQuery={(sql) => addNote(sql, current.n, "query")}
@@ -73,7 +74,11 @@ export default function GameBoard() {
         </main>
 
         <aside>
-          <SchemaPanel schema={schema} highlight={current.tables} />
+          <SchemaPanel
+            schema={schema}
+            highlight={current.tables}
+            onPeek={(sql) => setInsertRequest({ sql })}
+          />
           <Toolbox detectiveCase={current} />
         </aside>
       </div>

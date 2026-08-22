@@ -1,30 +1,30 @@
 import Link from "next/link";
 import GuideBook from "@/components/GuideBook";
 import SiteNav from "@/components/SiteNav";
-import { CASES } from "@/data/cases";
+import { CASES, TUTORIAL_COUNT } from "@/data/cases";
 import { GUIDE } from "@/data/guide";
 import { schemaFromSeed } from "@/lib/schemaFromSeed";
 
 const STEPS = [
   {
     n: 1,
-    title: "อ่านสำนวนคดี",
-    text: "แต่ละคดีมีคำให้การของพยานอยู่ในแฟ้ม บอกว่าต้องหาอะไร และเบาะแสมีอะไรบ้าง",
+    title: "เริ่มที่คดีฝึกหัด",
+    text: `${TUTORIAL_COUNT} คดีแรกเป็นด่านฝึก สอนทีละคำสั่ง — เขียน SQL ไม่เป็นมาก่อนเลยก็เริ่มตรงนี้ได้`,
   },
   {
     n: 2,
-    title: "เขียนคิวรีค้นของกลาง",
-    text: "พิมพ์ SQL ลงคอนโซลแล้วกดรัน (หรือ Ctrl + Enter) ฐานข้อมูลเป็น SQLite จริงที่รันในเบราว์เซอร์",
+    title: "กดรันคิวรีที่เตรียมไว้ให้",
+    text: "ทุกคดีมีคิวรีตั้งต้นรออยู่ในคอนโซลแล้ว กดรัน (หรือ Ctrl + Enter) ดูผลก่อน แล้วค่อยแก้ต่อทีละบรรทัด",
   },
   {
     n: 3,
     title: "ตอบชื่อผู้ต้องสงสัย",
-    text: "เจอคำตอบแล้วพิมพ์ชื่อลงช่องสรุปสำนวน ตอบถูกจะได้ตราปั๊ม “ปิดคดีแล้ว”",
+    text: "เจอคำตอบในตารางผลลัพธ์แล้วพิมพ์ลงช่องสรุปสำนวน ตอบถูกจะได้ตราปั๊ม “ปิดคดีแล้ว”",
   },
   {
     n: 4,
-    title: "ติดตรงไหนก็เปิดกล่องเครื่องมือ",
-    text: "มีทั้งคำใบ้และเฉลยคิวรีให้ดู ไม่ต้องฝืนนั่งเดา — ดูเฉลยแล้วเข้าใจก็ถือว่าได้แล้ว",
+    title: "ติดตรงไหนก็เปิดคำใบ้",
+    text: "กล่องเครื่องมือมีคำใบ้ให้เปิดทีละใบ ไล่จากชี้ทางคิดไปจนเกือบเฉลย — ยังไม่ไหวก็เปิดเฉลยคิวรีได้ ไม่ถือว่าโกง",
   },
 ];
 
@@ -52,9 +52,9 @@ export default function Page() {
             หน่วยสืบสวนฐานข้อมูล
           </h1>
           <p className="mx-auto mt-3 max-w-[56ch] text-[15.5px] text-[#C4AF87]">
-            เกมไขคดีด้วยการเขียน SQL — {CASES.length} คดี เรียงจาก <code>SELECT</code> ง่าย ๆ
-            ไปจนถึง <code>HAVING</code> และ subquery ไม่ต้องติดตั้งฐานข้อมูล ไม่ต้องสมัครอะไร
-            เปิดแล้วเล่นได้เลย
+            เกมไขคดีด้วยการเขียน SQL — {CASES.length} คดี เริ่มจาก {TUTORIAL_COUNT}{" "}
+            คดีฝึกหัดที่แค่กดปุ่มรันก็ผ่าน แล้วไต่ไปจนถึง <code>JOIN</code> และ subquery
+            ไม่ต้องติดตั้งฐานข้อมูล ไม่ต้องสมัครอะไร เปิดแล้วเล่นได้เลย
           </p>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
@@ -67,6 +67,7 @@ export default function Page() {
           </div>
 
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <span className="chip chip-dark">เริ่มจากศูนย์ได้ · {TUTORIAL_COUNT} คดีฝึกหัด</span>
             <span className="chip chip-dark">{CASES.length} คดี</span>
             <span className="chip chip-dark">{schema.length} ตาราง</span>
             <span className="chip chip-dark">คู่มือ {GUIDE.length} บท · {topics} หัวข้อ</span>
@@ -79,6 +80,7 @@ export default function Page() {
           <h2 className="section-title">เล่นยังไง</h2>
           <p className="section-lead">
             ทำงานเหมือนนักสืบจริง — อ่านสำนวน หาของกลางจากฐานข้อมูล แล้วชี้ตัวคนร้าย
+            ไม่ต้องท่องคำสั่งมาก่อน ค่อย ๆ เก็บทีละคดี
           </p>
 
           <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -98,8 +100,9 @@ export default function Page() {
         <section id="cases" className="mt-14 scroll-mt-20">
           <h2 className="section-title">สำนวนคดีทั้งหมด</h2>
           <p className="section-lead">
-            เรียงจากง่ายไปยาก เริ่มที่ <code>SELECT · WHERE</code> แล้วไต่ไปจนถึง window function
-            และ recursive CTE · คดีที่ 6–8 กับ 13–16 ต่อกันเป็นเนื้อเรื่องเดียว —
+            เรียงจากง่ายไปยาก {TUTORIAL_COUNT} คดีแรกคือด่านฝึกที่สอน <code>SELECT</code>,{" "}
+            <code>WHERE</code> และ <code>ORDER BY</code> ทีละคำสั่ง จากนั้นเป็นคดีจริงที่ไต่ไปจนถึง
+            window function และ recursive CTE · คดีที่ 9–11 กับ 16–19 ต่อกันเป็นเนื้อเรื่องเดียว —
             คนที่ดูเหมือนผิดตอนแรก อาจจะโดนใส่ร้ายอยู่ก็ได้
           </p>
 
@@ -112,6 +115,7 @@ export default function Page() {
                 <div className="min-w-0">
                   <div className="font-semibold leading-snug">{detectiveCase.title}</div>
                   <div className="mt-1 flex flex-wrap gap-1.5">
+                    {detectiveCase.tutorial && <span className="chip">ฝึกหัด</span>}
                     <span className="chip">{detectiveCase.level}</span>
                     {detectiveCase.tables.map((table) => (
                       <span key={table} className="chip font-mono">
@@ -135,7 +139,7 @@ export default function Page() {
           <h2 className="section-title">ตารางในฐานข้อมูล</h2>
           <p className="section-lead">
             ฐานข้อมูลเมือง Los Zorangeles ที่ต้องค้นหาของกลาง — ในเกมมีแผงนี้อยู่ข้างคอนโซลด้วย
-            ไม่ต้องจำชื่อคอลัมน์เอง
+            ไม่ต้องจำชื่อคอลัมน์เอง แถมกดส่องข้อมูลจริง 5 แถวแรกของแต่ละตารางได้
           </p>
 
           <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -168,7 +172,7 @@ export default function Page() {
         <section className="mt-14 text-center">
           <h2 className="section-title">พร้อมรับสำนวนแรกหรือยัง</h2>
           <p className="section-lead mx-auto">
-            คดีแรกใช้แค่ <code>SELECT</code> กับ <code>WHERE</code> — เขียนสองบรรทัดก็ปิดคดีได้แล้ว
+            คดีฝึกหัดคดีแรกมีคิวรีเขียนรอไว้ให้แล้ว — กดปุ่ม “รันคิวรี” ก็เริ่มได้เลย
           </p>
           <div className="mt-5">
             <Link href="/play" className="btn btn-lg">

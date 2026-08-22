@@ -23,9 +23,10 @@ export default function CaseTabs({
           data-active={i === currentIndex}
           data-solved={solved.has(i)}
           aria-current={i === currentIndex}
+          title={`${c.title} · ${c.level}`}
           onClick={() => onSelect(i)}
         >
-          คดี {c.n}
+          {c.tutorial ? "ฝึก" : "คดี"} {c.n}
           {solved.has(i) && " ✓"}
         </button>
       ))}
