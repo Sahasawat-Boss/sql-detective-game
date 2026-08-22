@@ -16,17 +16,28 @@ Build:
 npm run build && npm start
 ```
 
+## หน้าเว็บ
+
+| เส้นทาง | คืออะไร |
+|---------|---------|
+| `/`     | หน้า Home — ปุ่มเริ่มเกม, วิธีเล่น, รายการคดี, **คู่มือคำสั่ง SQL** 8 บท, ตารางในฐานข้อมูล |
+| `/play` | ตัวเกม (`<GameBoard />`) |
+
 ## โครงสร้างไฟล์
 
 ```
 src/
 ├── app/
-│   ├── globals.css        design tokens + คลาสร่วม (.paper, .btn, .console-shell, …)
+│   ├── globals.css        design tokens + คลาสร่วม (.paper, .sheet, .btn, .sql-block, …)
 │   ├── layout.tsx         root layout + โหลดฟอนต์
-│   └── page.tsx           เรียก <GameBoard />
+│   ├── page.tsx           หน้า Home
+│   └── play/page.tsx      เรียก <GameBoard />
 ├── components/
+│   ├── SiteNav.tsx        แถบนำทางบนสุดของหน้า Home
+│   ├── GuideBook.tsx      คู่มือ SQL ทั้งเล่ม (สารบัญ + บท + หัวข้อพับเก็บได้)
+│   ├── SqlBlock.tsx       บล็อกโค้ด SQL ระบายสี + ปุ่มคัดลอก
 │   ├── GameBoard.tsx      ประกอบทุกส่วนเข้าด้วยกัน (client entry)
-│   ├── Header.tsx         หัวเรื่อง + ProgressMeter
+│   ├── Header.tsx         หัวเรื่อง + ลิงก์กลับหน้าแรก + ProgressMeter
 │   ├── ProgressMeter.tsx  แถบไฟบอกจำนวนคดีที่ปิดแล้ว
 │   ├── CaseTabs.tsx       แท็บแฟ้มเลือกคดี
 │   ├── CaseFile.tsx       แผงสำนวนคดี + ตราปั๊ม "ปิดคดีแล้ว"
@@ -38,12 +49,14 @@ src/
 │   └── Message.tsx        กล่องข้อความสถานะ
 ├── data/
 │   ├── seed.ts            SQL สร้างตาราง + ใส่ข้อมูลเมือง Los Zorangeles
-│   └── cases.ts           โจทย์ทั้ง 8 คดี (เนื้อคดี, คำใบ้, เฉลย, คำตอบที่รับ)
+│   ├── cases.ts           โจทย์ทั้ง 8 คดี (เนื้อคดี, คำใบ้, เฉลย, คำตอบที่รับ)
+│   └── guide.ts           เนื้อหาคู่มือ 8 บท (หัวข้อ, ตัวอย่างคิวรี, กับดักที่เจอบ่อย)
 ├── hooks/
 │   ├── useDatabase.ts     โหลด wasm, สร้าง DB, อ่าน schema, runQuery()
 │   └── useGame.ts         คดีที่เปิดอยู่ + คดีที่ปิดแล้ว + ตรวจคำตอบ
 ├── lib/
 │   ├── normalize.ts       เทียบคำตอบแบบไม่สนตัวพิมพ์/ช่องว่าง
+│   ├── schemaFromSeed.ts  อ่านชื่อตาราง/คอลัมน์จาก seed.ts (หน้า Home ใช้ ไม่ต้องโหลด wasm)
 │   └── sqlGuard.ts        กันคิวรีที่แก้ข้อมูล (อ่านอย่างเดียว)
 └── types/index.ts         DetectiveCase, QueryResult, TableSchema
 ```
@@ -68,7 +81,13 @@ src/
 1. เติมข้อมูล/ตารางใหม่ใน `src/data/seed.ts`
 2. ต่อ object ใหม่ท้าย array ใน `src/data/cases.ts`
 
-UI กับ schema panel ปรับตามอัตโนมัติ ไม่ต้องแก้คอมโพเนนต์
+UI, schema panel และรายการคดีในหน้า Home ปรับตามอัตโนมัติ ไม่ต้องแก้คอมโพเนนต์
+
+## เพิ่มบทในคู่มือ
+
+ต่อ object ใหม่ท้าย array ใน `src/data/guide.ts` — สารบัญกับตัวนับหัวข้อในหน้า Home ปรับตามเอง
+โครงหนึ่งบทคือ บท → หัวข้อ (`topics`) → ตัวอย่าง (`examples`) + `pitfalls`
+ช่อง `explain` กับ `pitfalls` ใส่ HTML tag พื้นฐาน (`<b>`, `<code>`) ได้
 
 ## หมายเหตุ
 
